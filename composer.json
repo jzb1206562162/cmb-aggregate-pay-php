@@ -5,11 +5,11 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "CMB Aggregate Pay Contributors"
+            "name": "jzb1206562162"
         }
     ],
     "keywords": ["cmb", "china-merchants-bank", "aggregate-pay", "payment", "guomi", "sm2", "sm3", "sm4"],
-    "homepage": "https://github.com/your-org/cmb-aggregate-pay-php",
+    "homepage": "https://github.com/jzb1206562162/cmb-aggregate-pay-php",
     "require": {
         "php": ">=7.4",
         "lpilp/guomi": "^2.0",
