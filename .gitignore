@@ -1,0 +1,7 @@
+/vendor/
+/composer.lock
+/.idea/
+*.log
+/logs/
+/tests/coverage/
+.phpunit.result.cache

@@ -1,0 +1,34 @@
+{
+    "name": "cmb/cmb-aggregate-pay",
+    "description": "招商银行商户聚合支付 V3.4.1 PHP SDK（国密SM2/SM3/SM4，PSR标准）",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "CMB Aggregate Pay Contributors"
+        }
+    ],
+    "keywords": ["cmb", "china-merchants-bank", "aggregate-pay", "payment", "guomi", "sm2", "sm3", "sm4"],
+    "homepage": "https://github.com/your-org/cmb-aggregate-pay-php",
+    "require": {
+        "php": ">=7.4",
+        "lpilp/guomi": "^2.0",
+        "psr/log": "^1.1|^2.0|^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0",
+        "monolog/monolog": "^2.0|^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Cmb\\AggregatePay\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Cmb\\AggregatePay\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
