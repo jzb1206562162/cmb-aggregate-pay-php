@@ -6,6 +6,14 @@ use Cmb\AggregatePay\Exceptions\CmbPayException;
 
 trait PayscoreApiTrait
 {
+    // userId / notifyUrl / wechatSubMchid 可通过 config 自动注入
+
+    /**
+     * 获取商户号（由 use 该 Trait 的类实现）
+     * @return string
+     */
+    abstract protected function getMerId(): string;
+
     /**
      * 4.26 微信支付分预授权
      */
@@ -39,11 +47,11 @@ trait PayscoreApiTrait
     public function payscoreCreateOrder(array $params): array
     {
         $this->validateRequired($params, [
-            'serviceId', 'orderId', 'userId', 'serviceIntroduction',
-            'riskFund', 'timeRange', 'wechatTradeScene', 'notifyUrl'
+            'serviceId', 'orderId', 'serviceIntroduction',
+            'riskFund', 'timeRange', 'wechatTradeScene'
         ]);
         // 招行规范：订单号必须以商户号+0开头
-        $prefix = $this->config['merId'] . '0';
+        $prefix = $this->getMerId() . '0';
         if (strpos($params['orderId'], $prefix) !== 0) {
             throw new CmbPayException("支付分订单号必须以 {$prefix} 开头");
         }

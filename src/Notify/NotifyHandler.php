@@ -9,8 +9,10 @@ class NotifyHandler
 {
     private CmbSmCrypto $crypto;
     private LoggerInterface $logger;
-    private $idempotentCallback;
-    private $businessCallback;
+    /** @var callable|null */
+    private $idempotentCallback = null;
+    /** @var callable|null */
+    private $businessCallback = null;
 
     public function __construct(CmbSmCrypto $crypto, LoggerInterface $logger)
     {
@@ -41,8 +43,10 @@ class NotifyHandler
      * 通知入口
      * 招行异步通知以 POST JSON 或 form-data 方式发送，
      * 需要 url_decode 后验签（与同步响应验签不同）
+     *
+     * @return string 返回给招行的 JSON 响应字符串
      */
-    public function serve(): void
+    public function serve(): string
     {
         // 兼容 JSON body 和 form-data 两种方式
         $rawInput = file_get_contents('php://input');
@@ -50,8 +54,7 @@ class NotifyHandler
 
         if (!is_array($data) || empty($data)) {
             $this->logger->error('CMB Notify: empty or invalid data');
-            $this->fail('Invalid request data');
-            return;
+            return $this->buildFail('Invalid request data');
         }
 
         $this->logger->info('CMB Notify Received', $data);
@@ -71,8 +74,7 @@ class NotifyHandler
             
             if (is_callable($this->idempotentCallback) && 
                 !call_user_func($this->idempotentCallback, $orderId, $cmbOrderId)) {
-                $this->success();
-                return;
+                return $this->buildSuccess();
             }
 
             // 3. 业务处理
@@ -80,17 +82,19 @@ class NotifyHandler
                 call_user_func($this->businessCallback, $data);
             }
 
-            $this->success();
+            return $this->buildSuccess();
         } catch (\Throwable $e) {
             $this->logger->error('CMB Notify Failed: ' . $e->getMessage());
-            $this->fail($e->getMessage());
+            return $this->buildFail($e->getMessage());
         }
     }
 
-    private function success(): void
+    /**
+     * 构建成功响应 JSON
+     */
+    private function buildSuccess(): string
     {
-        header('Content-Type: application/json');
-        echo json_encode([
+        return json_encode([
             'version' => '3.4.1',
             'encoding' => 'UTF-8',
             'signMethod' => '02',
@@ -98,13 +102,14 @@ class NotifyHandler
             'respCode' => 'SUCCESS',
             'respMsg' => 'OK'
         ], JSON_UNESCAPED_UNICODE);
-        exit;
     }
 
-    private function fail(string $msg): void
+    /**
+     * 构建失败响应 JSON
+     */
+    private function buildFail(string $msg): string
     {
-        header('Content-Type: application/json', true, 200);
-        echo json_encode([
+        return json_encode([
             'version' => '3.4.1',
             'encoding' => 'UTF-8',
             'signMethod' => '02',
@@ -112,6 +117,5 @@ class NotifyHandler
             'respCode' => 'FAIL',
             'respMsg' => $msg
         ], JSON_UNESCAPED_UNICODE);
-        exit;
     }
 }

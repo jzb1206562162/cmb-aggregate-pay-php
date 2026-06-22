@@ -2,11 +2,11 @@
 
 namespace Cmb\AggregatePay\Traits;
 
-use Cmb\AggregatePay\Exceptions\CmbPayException;
-
 trait EcnyApiTrait
 {
     private static $validEcnyTransTypes = ['TT01', 'TT03', 'TT04', 'TT13'];
+
+    // userId / termId 可通过 config 自动注入，validateRequired 不再拦截
 
     /**
      * 4.17 数字人民币统一下单
@@ -14,7 +14,7 @@ trait EcnyApiTrait
     public function ecnyUnifiedOrder(array $params): array
     {
         $this->validateRequired($params, [
-            'orderId', 'userId', 'currencyCode', 'transactionType',
+            'orderId', 'currencyCode', 'transactionType',
             'txnAmt', 'terminalNo', 'terminalIp', 'goodsName',
             'tradePlace', 'orderTimeExpire'
         ]);
@@ -28,7 +28,7 @@ trait EcnyApiTrait
     public function ecnyUnifiedPayment(array $params): array
     {
         $this->validateRequired($params, [
-            'orderId', 'userId', 'currencyCode', 'transactionType',
+            'orderId', 'currencyCode', 'transactionType',
             'txnAmt', 'terminalNo', 'terminalIp', 'goodsName',
             'tradePlace', 'orderTimeExpire', 'authCode'
         ]);
@@ -42,7 +42,7 @@ trait EcnyApiTrait
     public function ecnySubWalletPay(array $params): array
     {
         $this->validateRequired($params, [
-            'orderId', 'userId', 'currencyCode', 'txnAmt',
+            'orderId', 'currencyCode', 'txnAmt',
             'debtorAgentId', 'authenticCode', 'authenticInfo',
             'goodsName', 'sceneId'
         ]);
@@ -55,7 +55,7 @@ trait EcnyApiTrait
     public function ecnySubWalletPayWithContract(array $params): array
     {
         $this->validateRequired($params, [
-            'orderId', 'userId', 'currencyCode', 'txnAmt',
+            'orderId', 'currencyCode', 'txnAmt',
             'debtorAgentId', 'authenticCode', 'authenticInfo',
             'goodsName', 'sceneId', 'contractReq'
         ]);
@@ -68,7 +68,7 @@ trait EcnyApiTrait
     public function ecnyUnifiedOrderWithContract(array $params): array
     {
         $this->validateRequired($params, [
-            'orderId', 'userId', 'currencyCode', 'transactionType',
+            'orderId', 'currencyCode', 'transactionType',
             'txnAmt', 'terminalNo', 'terminalIp', 'goodsName',
             'tradePlace', 'orderTimeExpire', 'contractReq'
         ]);

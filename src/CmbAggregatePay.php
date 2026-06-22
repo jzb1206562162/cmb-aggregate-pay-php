@@ -42,6 +42,14 @@ class CmbAggregatePay implements ApiInterface
     }
 
     /**
+     * 获取商户号（供 Trait 使用）
+     */
+    protected function getMerId(): string
+    {
+        return $this->config['merId'];
+    }
+
+    /**
      * 统一请求入口
      */
     public function request(string $apiName, array $params = []): array
@@ -60,6 +68,13 @@ class CmbAggregatePay implements ApiInterface
             'signMethod' => '02',
             'merId' => $this->config['merId'],
         ], $params);
+
+        // 自动注入配置中的默认参数（仅当未传入时生效）
+        foreach (['userId', 'wechatSubMchid', 'notifyUrl', 'termId'] as $autoKey) {
+            if (!isset($params[$autoKey]) && isset($this->config[$autoKey]) && $this->config[$autoKey] !== '') {
+                $params[$autoKey] = $this->config[$autoKey];
+            }
+        }
 
         // 敏感字段加密
         $params = $this->encryptSensitiveFields($params);
@@ -165,7 +180,6 @@ class CmbAggregatePay implements ApiInterface
             '微信支付分查询订单' => ['path' => 'mchorders/payscore/queryorder'],
             '微信支付分撤销订单' => ['path' => 'mchorders/payscore/cancelorder'],
             '微信支付分修改订单金额' => ['path' => 'mchorders/payscore/modifyorder'],
-            '微信支付分确认订单通知' => ['path' => 'mchorders/payscore/confirmorder'],
 
             // 智能合约
             '智能合约交易分账' => ['path' => 'mchorders/contract/benefit'],

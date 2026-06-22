@@ -6,12 +6,15 @@ use Cmb\AggregatePay\Exceptions\CmbPayException;
 
 trait OrderApiTrait
 {
+    // 以下参数可通过 config 自动注入，validateRequired 不再拦截：
+    //   userId / wechatSubMchid / notifyUrl / termId
+
     /**
      * 4.1 收款码申请
      */
     public function applyQrCode(array $params): array
     {
-        $this->validateRequired($params, ['orderId', 'userId', 'txnAmt', 'notifyUrl']);
+        $this->validateRequired($params, ['orderId', 'txnAmt']);
         return $this->request('收款码申请', $params);
     }
 
@@ -23,7 +26,6 @@ trait OrderApiTrait
         if (!isset($params['orderId']) && !isset($params['cmbOrderId'])) {
             throw new CmbPayException('orderId 和 cmbOrderId 至少传一个');
         }
-        $this->validateRequired($params, ['userId']);
         return $this->retryRequest('支付结果查询', $params);
     }
 
@@ -35,7 +37,7 @@ trait OrderApiTrait
         if (!isset($params['origOrderId']) && !isset($params['origCmbOrderId'])) {
             throw new CmbPayException('origOrderId 和 origCmbOrderId 至少传一个');
         }
-        $this->validateRequired($params, ['orderId', 'userId', 'txnAmt', 'refundAmt']);
+        $this->validateRequired($params, ['orderId', 'txnAmt', 'refundAmt']);
         return $this->retryRequest('退款申请', $params);
     }
 
@@ -47,7 +49,6 @@ trait OrderApiTrait
         if (!isset($params['orderId']) && !isset($params['cmbOrderId'])) {
             throw new CmbPayException('orderId 和 cmbOrderId 至少传一个');
         }
-        $this->validateRequired($params, ['userId']);
         return $this->retryRequest('退款结果查询', $params);
     }
 
@@ -59,7 +60,6 @@ trait OrderApiTrait
         if (!isset($params['origOrderId']) && !isset($params['origCmbOrderId'])) {
             throw new CmbPayException('origOrderId 和 origCmbOrderId 至少传一个');
         }
-        $this->validateRequired($params, ['userId']);
         return $this->request('关闭订单', $params);
     }
 
@@ -68,7 +68,7 @@ trait OrderApiTrait
      */
     public function payByAuthCode(array $params): array
     {
-        $this->validateRequired($params, ['orderId', 'userId', 'authCode', 'txnAmt', 'notifyUrl', 'termId']);
+        $this->validateRequired($params, ['orderId', 'authCode', 'txnAmt']);
         return $this->request('付款码收款', $params);
     }
 
@@ -80,7 +80,6 @@ trait OrderApiTrait
         if (!isset($params['origOrderId']) && !isset($params['origCmbOrderId'])) {
             throw new CmbPayException('origOrderId 和 origCmbOrderId 至少传一个');
         }
-        $this->validateRequired($params, ['userId']);
         return $this->request('付款码支付撤销', $params);
     }
 
@@ -89,7 +88,7 @@ trait OrderApiTrait
      */
     public function wechatUnifiedOrder(array $params): array
     {
-        $this->validateRequired($params, ['orderId', 'userId', 'body', 'tradeType', 'txnAmt', 'notifyUrl', 'spbillCreateIp']);
+        $this->validateRequired($params, ['orderId', 'body', 'tradeType', 'txnAmt', 'spbillCreateIp']);
         return $this->request('微信统一下单', $params);
     }
 
@@ -98,7 +97,7 @@ trait OrderApiTrait
      */
     public function alipayServPay(array $params): array
     {
-        $this->validateRequired($params, ['orderId', 'userId', 'txnAmt', 'notifyUrl']);
+        $this->validateRequired($params, ['orderId', 'txnAmt']);
         return $this->request('服务窗支付', $params);
     }
 
@@ -107,7 +106,7 @@ trait OrderApiTrait
      */
     public function alipayQrPay(array $params): array
     {
-        $this->validateRequired($params, ['orderId', 'userId', 'txnAmt', 'notifyUrl']);
+        $this->validateRequired($params, ['orderId', 'txnAmt']);
         return $this->request('支付宝native码支付', $params);
     }
 
@@ -125,7 +124,7 @@ trait OrderApiTrait
      */
     public function applyOrderQrCode(array $params): array
     {
-        $this->validateRequired($params, ['orderId', 'userId', 'txnAmt', 'notifyUrl']);
+        $this->validateRequired($params, ['orderId', 'txnAmt']);
         return $this->request('订单二维码申请', $params);
     }
 
@@ -134,7 +133,7 @@ trait OrderApiTrait
      */
     public function wechatMiniAppOrder(array $params): array
     {
-        $this->validateRequired($params, ['orderId', 'userId', 'body', 'tradeType', 'txnAmt', 'notifyUrl', 'spbillCreateIp']);
+        $this->validateRequired($params, ['orderId', 'body', 'tradeType', 'txnAmt', 'spbillCreateIp']);
         return $this->request('微信小程序下单', $params);
     }
 
@@ -143,7 +142,7 @@ trait OrderApiTrait
      */
     public function unionCloudPay(array $params): array
     {
-        $this->validateRequired($params, ['orderId', 'userId', 'body', 'tradeScene', 'txnAmt', 'notifyUrl']);
+        $this->validateRequired($params, ['orderId', 'body', 'tradeScene', 'txnAmt']);
         return $this->request('银联云闪付', $params);
     }
 
@@ -155,7 +154,6 @@ trait OrderApiTrait
         if (!isset($params['origOrderId']) && !isset($params['origCmbOrderId'])) {
             throw new CmbPayException('origOrderId 和 origCmbOrderId 至少传一个');
         }
-        $this->validateRequired($params, ['userId']);
         return $this->request('订单码关闭订单', $params);
     }
 }
