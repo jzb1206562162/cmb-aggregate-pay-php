@@ -7,7 +7,10 @@ class Retry
     /**
      * 指数退避重试
      */
-    public static function execute(callable $callback, int $maxAttempts = 3, int $baseDelayMs = 200): mixed
+    /**
+     * @return mixed
+     */
+    public static function execute(callable $callback, int $maxAttempts = 3, int $baseDelayMs = 200)
     {
         $attempt = 0;
         while ($attempt < $maxAttempts) {
