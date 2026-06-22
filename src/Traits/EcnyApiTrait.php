@@ -6,7 +6,7 @@ use Cmb\AggregatePay\Exceptions\CmbPayException;
 
 trait EcnyApiTrait
 {
-    private const VALID_ECNY_TRANS_TYPES = ['TT01', 'TT03', 'TT04', 'TT13'];
+    private static $validEcnyTransTypes = ['TT01', 'TT03', 'TT04', 'TT13'];
 
     /**
      * 4.17 数字人民币统一下单
@@ -18,7 +18,7 @@ trait EcnyApiTrait
             'txnAmt', 'terminalNo', 'terminalIp', 'goodsName',
             'tradePlace', 'orderTimeExpire'
         ]);
-        $this->validateEnum($params['transactionType'], self::VALID_ECNY_TRANS_TYPES, 'transactionType');
+        $this->validateEnum($params['transactionType'], self::$validEcnyTransTypes, 'transactionType');
         return $this->request('数字人民币统一下单', $params);
     }
 
@@ -72,7 +72,7 @@ trait EcnyApiTrait
             'txnAmt', 'terminalNo', 'terminalIp', 'goodsName',
             'tradePlace', 'orderTimeExpire', 'contractReq'
         ]);
-        $this->validateEnum($params['transactionType'], self::VALID_ECNY_TRANS_TYPES, 'transactionType');
+        $this->validateEnum($params['transactionType'], self::$validEcnyTransTypes, 'transactionType');
         return $this->request('数字人民币统一下单-带合约', $params);
     }
 }
